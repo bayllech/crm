@@ -38,10 +38,9 @@
 
     </bean>
 
-
-    <!--事务管理器-->
+    <!-- Hibernate4事务管理器 -->
     <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
-        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="sessionFactory" ref="sessionFactory"></property>
     </bean>
 
     <!--基于注解的事务-->

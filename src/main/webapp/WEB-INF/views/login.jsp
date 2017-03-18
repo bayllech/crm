@@ -27,13 +27,18 @@
     <div class="login-logo">
         <a href="#"><h2 style="color: rgba(17,17,34,0.98);">HEROIC CRM</h2></a>
     </div>
+    <c:if test="${not empty message}">
+        <div class="alert alert-danger">
+                ${message}
+        </div>
+    </c:if>
     <!-- /.login-logo -->
     <div class="login-box-body" style="background-color: #ffe;">
         <p class="login-box-msg">请输入帐号密码</p>
 
         <form method="post">
             <div class="form-group has-feedback">
-                <input type="text" class="form-control" name="userName" placeholder="帐号">
+                <input type="text" class="form-control" name="username" placeholder="帐号">
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
             </div>
             <div class="form-group has-feedback">

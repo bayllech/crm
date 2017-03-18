@@ -1,13 +1,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<<<<<<< HEAD
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
 scratch. This page gets rid of all links and provides the needed markup only.
 -->
+=======
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+>>>>>>> 763e0297cf8153cecc40b388dead21fde1e12124
 <html>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<<<<<<< HEAD
     <title>凯盛CRM</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -49,10 +55,31 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
             <!-- Your Page Content Here -->
 
+=======
+    <title>欢迎</title>
+    <%@include file="include/css.jsp"%>
+    <link rel="stylesheet" href="/static/plugins/datatables/jquery.dataTables.min.css">
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+
+    <%@include file="include/header.jsp"%>
+    <jsp:include page="include/sider.jsp">
+        <jsp:param name="menu" value="home"/>
+    </jsp:include>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Main content -->
+        <section class="content">
+
+>>>>>>> 763e0297cf8153cecc40b388dead21fde1e12124
         </section>
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
+<<<<<<< HEAD
 </div>
 <!-- ./wrapper -->
 
@@ -69,5 +96,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
      Both of these plugins are recommended to enhance the
      user experience. Slimscroll is required when using the
      fixed layout. -->
+=======
+
+</div>
+
+<%@include file="include/js.jsp"%>
+
+<script>
+
+</script>
+>>>>>>> 763e0297cf8153cecc40b388dead21fde1e12124
 </body>
 </html>
