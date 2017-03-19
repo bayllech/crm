@@ -11,21 +11,18 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>凯盛CRM | 文档管理</title>
+    <title>HEROIC CRM | 文档管理</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.6 -->
-    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="/static/dist/css/AdminLTE.min.css">
-    <link rel="stylesheet" href="/static/dist/css/skins/skin-blue.min.css">
+    <%@include file="../include/css.jsp"%>
     <link rel="stylesheet" href="/static/plugins/uploader/webuploader.css">
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
-    <%@include file="../include/mainHeader.jsp"%>
-    <jsp:include page="../include/leftSide.jsp">
+    <%@include file="../include/header.jsp"%>
+    <jsp:include page="../include/sider.jsp">
         <jsp:param name="menu" value="document"/>
     </jsp:include>
 
@@ -116,7 +113,6 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-
-
+<%@include file="../include/js.jsp"%>
 </body>
 </html>
