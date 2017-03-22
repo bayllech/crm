@@ -10,8 +10,8 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String rolename;
-    @OneToMany(mappedBy = "role")
-    private Set<User> userSet;
+    /*@OneToMany(mappedBy = "role")
+    private Set<User> userSet;*/
 
     public Integer getId() {
         return id;
@@ -29,11 +29,11 @@ public class Role {
         this.rolename = rolename;
     }
 
-    public Set<User> getUserSet() {
+   /* public Set<User> getUserSet() {
         return userSet;
     }
 
     public void setUserSet(Set<User> userSet) {
         this.userSet = userSet;
-    }
+    }*/
 }

@@ -8,6 +8,9 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Map;
+
 @Repository
 public class UserDao extends BaseDao<User,Integer>{
 
@@ -32,5 +35,13 @@ public class UserDao extends BaseDao<User,Integer>{
         Criteria criteria = session().createCriteria(User.class);
         criteria.add(Restrictions.eq("username", username));
         return (User) criteria.uniqueResult();
+    }
+
+    public List<User> findByParam(String start,String length) {
+        Criteria criteria = session().createCriteria(User.class);
+        criteria.setFirstResult(Integer.valueOf(start));
+        criteria.setMaxResults(Integer.valueOf(length));
+
+        return criteria.list();
     }
 }

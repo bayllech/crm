@@ -38,7 +38,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <c:forEach items="${userLogs}" var="userLog">
+                                <c:forEach items="${page.items}" var="userLog">
                                     <tr>
                                         <td>${userLog.logintime}</td>
                                         <td>${userLog.loginip}</td>
@@ -50,7 +50,7 @@
                     </div>
                 </div>
             </div>
-
+            <ul class="pagination pull-right" id="page"></ul>
         </section>
         <!-- /.content -->
     </div>
@@ -59,5 +59,20 @@
 </div>
 
 <%@include file="../include/js.jsp"%>
+<script src="/static/plugins/jquery.twbsPagination.min.js"></script>
+
+<script>
+    $(function () {
+        $("#page").twbsPagination({
+            totalPages:${page.totalPages},
+            visiblePages:5,
+            first:'首页',
+            prev:'上一页',
+            next:'下一页',
+            last:'末页',
+            href:'?p={{number}}'
+        });
+    });
+</script>
 </body>
 </html>
