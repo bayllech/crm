@@ -4,6 +4,8 @@ import com.kaishengit.pojo.User;
 import com.kaishengit.pojo.UserLog;
 import com.kaishengit.service.UserService;
 import com.kaishengit.shiro.ShiroUtil;
+import com.kaishengit.util.Page;
+import com.kaishengit.util.QueryParam;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -16,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -70,10 +73,14 @@ public class HomeController {
      * 查看登录日志
      */
     @GetMapping("/loginLog")
-    public String loginLog(Model model) {
+    public String loginLog(Model model,
+                           @RequestParam(required = false,defaultValue = "1",name = "p") Integer pageNo,
+                           HttpServletRequest request) {
 //        List<UserLog> userLogs = ShiroUtil.getCurrentUser().getUserLogList();
-        List<UserLog> userLogs = userService.findLog(ShiroUtil.getCurrentUser());
-        model.addAttribute("userLogs", userLogs);
+        Page<UserLog> userLogs = userService.findByPage(pageNo);
+
+//        List<UserLog> userLogs = userService.findLog(ShiroUtil.getCurrentUser());
+        model.addAttribute("page", userLogs);
         return "user/log";
     }
 

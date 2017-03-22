@@ -15,15 +15,17 @@ public class User {
     private String password;
     private String realname;
     private String weixin;
+    @Column(insertable = false,updatable = false)
     private Timestamp createtime;
     @Transient
     private Integer roleid;
-    private Integer enable;
+    @Column(insertable = false)
+    private Boolean enable;
     @ManyToOne
     @JoinColumn(name = "roleid")
     private Role role;
-    @OneToMany(mappedBy = "user")
-    private List<UserLog> userLogList;
+    /*@OneToMany(mappedBy = "user")
+    private List<UserLog> userLogList;*/
 
     public Integer getId() {
         return id;
@@ -73,19 +75,11 @@ public class User {
         this.createtime = createtime;
     }
 
-    public Integer getRoleid() {
-        return roleid;
-    }
-
-    public void setRoleid(Integer roleid) {
-        this.roleid = roleid;
-    }
-
-    public Integer getEnable() {
+    public Boolean getEnable() {
         return enable;
     }
 
-    public void setEnable(Integer enable) {
+    public void setEnable(Boolean enable) {
         this.enable = enable;
     }
 
@@ -97,11 +91,19 @@ public class User {
         this.role = role;
     }
 
-    public List<UserLog> getUserLogList() {
+    /*public List<UserLog> getUserLogList() {
         return userLogList;
     }
 
     public void setUserLogList(List<UserLog> userLogList) {
         this.userLogList = userLogList;
+    }*/
+
+    public Integer getRoleid() {
+        return roleid;
+    }
+
+    public void setRoleid(Integer roleid) {
+        this.roleid = roleid;
     }
 }

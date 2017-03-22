@@ -91,6 +91,21 @@ public class BaseDao<T , PK extends Serializable>{
         return page;
     }
 
+    public Page<T> findByPage(int pageNo,int pageSize,String propertyName,String orderType) {
+        Page<T> page = new Page<>(pageNo,pageSize,count().intValue());
+        Criteria criteria = getSession().createCriteria(clazz);
+        criteria.setFirstResult(page.getStart());
+        criteria.setMaxResults(pageSize);
+        if("desc".equalsIgnoreCase(orderType)) {
+            criteria.addOrder(Order.desc(propertyName));
+        } else {
+            criteria.addOrder(Order.asc(propertyName));
+        }
+        List<T> items = criteria.list();
+        page.setItems(items);
+        return page;
+    }
+
     public Page<T> findByPage(int pageNo,int pageSize,List<QueryParam> queryParamList) {
         Long count = count(queryParamList);
         Page<T> page = new Page<>(pageNo,pageSize,count.intValue());
