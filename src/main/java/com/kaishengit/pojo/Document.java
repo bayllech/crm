@@ -16,7 +16,7 @@ public class Document {
     private Integer id;
     private String name;
     private String size;
-    @Column(insertable = false,updatable = false)
+    @Column(insertable = false)
     private Timestamp createtime;
     private String createuser;
     private String type;

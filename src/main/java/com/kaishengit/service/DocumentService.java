@@ -33,4 +33,6 @@ public interface DocumentService {
     Document findById(Integer id);
 
     void delById(Integer id);
+
+    Page<Document> findByPage(int pageNo,List<Document> documentList);
 }

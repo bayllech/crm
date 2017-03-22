@@ -87,6 +87,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </tbody>
                     </table>
                 </div>
+                <div class="box-footer">
+                    <ul style="margin:5px 0px" id="pagination" class="pagination pull-right"></ul>
+                </div>
             </div>
 
         </section>
@@ -125,6 +128,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <%@include file="../include/js.jsp"%>
 <script src="/static/plugins/layer/layer.js"></script>
 <script src="/static/plugins/uploader/webuploader.min.js"></script>
+<script src="/static/plugins/jquery.twbsPagination.min.js"></script>
+
 <script>
     $(function(){
         //上传文件
@@ -189,6 +194,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 })
             });
         });
+
+        //分页插件的使用
+        $("#pagination").twbsPagination({
+            totalPages:${page.totalPages},
+            visiblePages:5,
+            href:"/document?p={{number}}",
+            first:"首页",
+            prev:"上一页",
+            next:"下一页",
+            last:"末页"
+        });
+
     });
 </script>
 </body>

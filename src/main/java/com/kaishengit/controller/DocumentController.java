@@ -4,6 +4,8 @@ import com.kaishengit.dto.AjaxResult;
 import com.kaishengit.exception.NotFoundException;
 import com.kaishengit.pojo.Document;
 import com.kaishengit.service.DocumentService;
+import com.kaishengit.util.Page;
+import com.kaishengit.util.QueryParam;
 import org.jboss.logging.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,11 +43,16 @@ public class DocumentController {
      */
     @GetMapping
     public String documentList(Model model,
-                               @RequestParam(required = false , defaultValue = "0" ) Integer fid) {
+                               @RequestParam(required = false , defaultValue = "0" ) Integer fid,
+                               @RequestParam(required = false,defaultValue = "1") Integer p) {
 
         List<Document> documentList = documentService.findDocumentByFid(fid);
+        Page<Document> documentPage = documentService.findByPage(p,documentList);
+
+        model.addAttribute("page",documentPage);
         model.addAttribute("documentList",documentList);
         model.addAttribute("fid" , fid);
+
         return "document/list";
     }
 
@@ -101,6 +109,11 @@ public class DocumentController {
 
     }
 
+    /**
+     * 删除文件
+     * @param id  根据文件id
+     * @return    删除结果
+     */
     @GetMapping("/del/{id:\\d+}")
     @ResponseBody
     public AjaxResult del(@PathVariable Integer id) {

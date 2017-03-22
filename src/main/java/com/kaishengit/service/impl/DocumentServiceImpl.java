@@ -112,13 +112,13 @@ public class DocumentServiceImpl implements DocumentService {
     /**
      * 分页显示
      * @param pageNo  页码
-     * @param queryParamList
+     * @param documentList
      * @return
      */
     //TODO
     @Transactional(readOnly = true)
-    public Page<Document> findByPage(int pageNo, List<QueryParam> queryParamList) {
-        return documentDao.findByPage(pageNo,10,queryParamList);
+    public Page<Document> findByPage(int pageNo, List<Document> documentList) {
+        return documentDao.findByPage(pageNo,5);
     }
 
 
