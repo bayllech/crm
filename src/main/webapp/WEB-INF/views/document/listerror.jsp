@@ -1,17 +1,30 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%--
+  Created by IntelliJ IDEA.
+  User: jiahao0
+  Date: 2017/3/18
+  Time: 9:59
+  To change this template use File | Settings | File Templates.
+--%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
 <html>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>凯盛CRM | 文档管理</title>
-    <%@include file="../include/css.jsp"%>
+    <title>HEROIC CRM | 文档管理</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <%--<%@include file="../include/css.jsp"%>--%>
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/static/plugins/fontawesome/css/font-awesome.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/static/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/static/dist/css/skins/skin-blue.min.css">
     <link rel="stylesheet" href="/static/plugins/uploader/webuploader.css">
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -71,9 +84,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <td>${doc.size}</td>
                                 <td>${doc.createuser}</td>
                                 <td><fmt:formatDate value="${doc.createtime}" pattern="y-M-d H:m"/></td>
-                                <td>
-                                    <a href="javascript:;" class="remove" rel="${doc.id}"><i class="fa fa-trash text-danger"></i></a>
-                                </td>
                             </tr>
                         </c:forEach>
 
@@ -113,36 +123,48 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<!-- REQUIRED JS SCRIPTS -->
-
-<%@include file="../include/js.jsp"%>
-<script src="/static/plugins/uploader/webuploader.min.js"></script>
-<script>
-    $(function(){
+<%--<%@include file="../include/js.jsp"%>--%>
+<!-- jQuery 2.2.0 -->
+<script src="/static/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+<!-- AdminLTE App -->
+<script src="/static/dist/js/app.min.js"></script>
+<script src="/static/plugins/uploader/webuploader.min.js"/>
+ <script>
+    $(function (){
         //上传文件
         var uploader = WebUploader.create({
+
             swf:"/static/plugins/uploader/Uploader.swf",
             pick:"#uploadBtn",
             server:"/document/file/upload",
             fileValL:"file",
             formData:{"fid":"${fid}"},
-            auto:true //选择文件后直接上传
+            auto:true
+
         });
+
+
         //上传文件成功
         uploader.on("startUpload",function(){
-            $("#uploadBtn .text").html('<i class="fa fa-spinner fa-spin"></i> 上传中...');
+            $("#uploadBtn .text").html('<i class="fa fa-spinner fa-spin"></i> 上传中......');
         });
         uploader.on( 'uploadSuccess', function( file,data ) {
             if(data._raw == "success") {
                 window.history.go(0);
             }
         });
+
         uploader.on( 'uploadError', function( file ) {
-            alert("文件上传失败");
+            alert("文件上传失败,请重试");
         });
+
         uploader.on( 'uploadComplete', function( file ) {
-            $("#uploadBtn .text").html('<i class="fa fa-upload"></i> 上传文件').removeAttr("disabled");;
+            $("#uploadBtn.text").html('<i class="fa fa-upload"></i> 上传文件').removeAttr("disabled");;
         });
+
+
         //新建文件夹
         $("#newDir").click(function(){
             $("#dirModal").modal({
@@ -151,30 +173,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 keyboard:false
             });
         });
-        $("#saveDirBtn").click(function(){
+
+        $("#saveDirBtn").click(function () {
             if(!$("#dirname").val()) {
                 $("#dirname").focus();
-                return;
+                return ;
             }
             $("#saveDirForm").submit();
+
         });
-        $(".remove").click(function () {
-            var id = $(this).attr("rel");
-            layer.confirm("确定要删除吗?",function(index){
-                layer.close(index);
-                $.get("/doc/del/"+id).done(function(resp){
-                    if(resp.status == 'success') {
-                        layer.msg("删除成功");
-                        window.history.go(0);
-                    } else {
-                        layer.msg(resp.message);
-                    }
-                }).error(function(){
-                    layer.msg("服务器忙，请稍后");
-                })
-            });
-        });
+
     });
+
+
 </script>
 </body>
 </html>

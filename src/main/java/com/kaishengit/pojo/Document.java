@@ -4,8 +4,12 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "t_document")
+@Table(name="t_document")
 public class Document {
+
+    public static final String TYPE_DIR = "dir";
+    public static final String TYPE_DOC = "doc";
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

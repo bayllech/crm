@@ -1,15 +1,16 @@
 package com.kaishengit.controller;
 
+import com.kaishengit.exception.NotFoundException;
 import com.kaishengit.pojo.Document;
 import com.kaishengit.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -21,11 +22,10 @@ public class DocumentController {
 
     @Autowired
     private DocumentService documentService;
-    @Value("${upload.path}")
-    private String uploadPath;
+
 
     /**
-     * 内部网盘文件列表
+     * 根据fid查找文件和文件夹
      * @return
      */
     @GetMapping
@@ -36,8 +36,30 @@ public class DocumentController {
         model.addAttribute("documentList",documentList);
         model.addAttribute("fid" , fid);
         return "document/list";
+    }
+
+    /**
+     * 创建新文件夹
+     * @return
+     */
+    @PostMapping("/dir/new")
+    public String saveDir(String name , Integer fid) {
+        documentService.saveDir(name , fid);
+
+        return "redirect:/doc:fid" + fid;
+    }
 
 
+    @PostMapping("/file/upload")
+    @ResponseBody
+    public String saveFile (MultipartFile file , Integer fid) throws IOException {
+
+        if(file.isEmpty()) {
+            throw new NotFoundException();
+        } else {
+           documentService.saveFile(file ,fid);
+            return "success";
+        }
     }
 
 }
