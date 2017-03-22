@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -26,4 +27,10 @@ public interface DocumentService {
     List<Document> findDocumentByFid(Integer fid);
 
     void saveDir(String name, Integer fid);
+
+    InputStream downloadFile(Integer id) throws FileNotFoundException;
+
+    Document findById(Integer id);
+
+    void delById(Integer id);
 }

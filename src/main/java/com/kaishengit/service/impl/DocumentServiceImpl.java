@@ -1,5 +1,7 @@
 package com.kaishengit.service.impl;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.google.common.collect.Lists;
 import com.kaishengit.dao.DocumentDao;
 import com.kaishengit.exception.ServiceException.ServiceException;
 import com.kaishengit.pojo.Document;
@@ -9,7 +11,6 @@ import com.kaishengit.util.Page;
 import com.kaishengit.util.QueryParam;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -65,36 +66,45 @@ public class DocumentServiceImpl implements DocumentService {
      */
     @Override
     public void saveFile(MultipartFile file, Integer fid) {
-       String name = file.getOriginalFilename();
 
-       String lastName = "";
-       if(name.lastIndexOf(".") != -1) {
+        //判断文件夹是否存在，不存在创建
+        File filePath = new File(UploadPath);
+        if (!filePath.exists() && !filePath.isDirectory()) {
+            filePath.mkdir();
+        }
+
+
+        String name = file.getOriginalFilename();
+
+        String lastName = "";
+        if(name.lastIndexOf(".") != -1) {
             lastName = name.substring(name.lastIndexOf("."));
-       }
-       String newName = UUID.randomUUID().toString() + name;
-       try {
-           File saveFile = new File(new File(UploadPath) , newName);
-           FileOutputStream outputStream = new FileOutputStream(saveFile);
-           InputStream inputStream = file.getInputStream();
+        }
+        String newName = UUID.randomUUID().toString() + lastName;
+        try {
+            File saveFile = new File(new File(UploadPath) , newName);
+            FileOutputStream outputStream = new FileOutputStream(saveFile);
+            InputStream inputStream = file.getInputStream();
 
-           IOUtils.copy(inputStream , outputStream);
-           outputStream.flush();
-           outputStream.close();
-           inputStream.close();
+            IOUtils.copy(inputStream , outputStream);
+            outputStream.flush();
+            outputStream.close();
+            inputStream.close();
 
 
-       } catch (IOException e) {
-           throw new ServiceException("文件存储异常" , e);
-       }
+        } catch (IOException e) {
+            throw new ServiceException("文件存储异常" , e);
+        }
 
-       Document document = new Document();
-       document.setCreateuser(ShiroUtil.getCurrentUserName());
-       document.setContexttype(file.getContentType());
-       document.setName(name);
-       document.setType(Document.TYPE_DOC);
-       document.setFid(fid);
-       document.setSize(FileUtils.byteCountToDisplaySize(file.getSize()));
-       documentDao.save(document);
+        Document document = new Document();
+        document.setCreateuser(ShiroUtil.getCurrentUserName());
+        document.setContexttype(file.getContentType());
+        document.setName(name);
+        document.setType(Document.TYPE_DOC);
+        document.setFid(fid);
+        document.setFilename(newName);
+        document.setSize(FileUtils.byteCountToDisplaySize(file.getSize()));
+        documentDao.save(document);
 
     }
 
@@ -105,8 +115,91 @@ public class DocumentServiceImpl implements DocumentService {
      * @param queryParamList
      * @return
      */
+    //TODO
     @Transactional(readOnly = true)
     public Page<Document> findByPage(int pageNo, List<QueryParam> queryParamList) {
         return documentDao.findByPage(pageNo,10,queryParamList);
     }
+
+
+    /**
+     * 下载文件
+     * @param id  根据id查找
+     * @return
+     * @throws FileNotFoundException
+     */
+    @Override
+    public InputStream downloadFile(Integer id) throws FileNotFoundException {
+        Document document = findById(id);
+        if(document == null || Document.TYPE_DIR.equals(document.getType())) {
+            return null;
+        } else {
+            FileInputStream inputStream =
+                    new FileInputStream(new File(new File(UploadPath) , document.getFilename()));
+            return inputStream;
+
+        }
+
+    }
+
+    @Override
+    public Document findById(Integer id) {
+        return documentDao.findById(id);
+    }
+
+    @Override
+    @Transactional
+    public void delById(Integer id) {
+
+        Document document = findById(id);
+        if(document != null) {
+            if(Document.TYPE_DOC.equalsIgnoreCase(document.getType())) {
+                //删除文件
+                File file = new File(UploadPath,document.getFilename());
+                file.delete();
+                //删除数据库记录
+                documentDao.delete(id);
+
+            }else {
+
+                List<Document> documentList = documentDao.findAll();
+                List<Integer> delIdList = Lists.newArrayList();
+                findDelId(documentList,delIdList,id);
+                delIdList.add(id);
+                for(Integer delId : delIdList) {
+                    documentDao.delete(delId);
+                }
+
+            }
+
+        }
+
+
+    }
+
+    /**
+     * 递归删除文件夹文件
+     * @param documentList
+     * @param delIdList  文件夹id集合
+     * @param id
+     */
+    private void findDelId(List<Document> documentList, List<Integer> delIdList, Integer id) {
+
+        for(Document document : documentList) {
+            if(document.getFid().equals(id)){
+                delIdList.add(document.getId());
+                if(document.getType().equals(Document.TYPE_DIR)) {
+                    findDelId(documentList, delIdList, document.getId());
+                }else {
+                    File file = new File(UploadPath , document.getFilename());
+                    file.delete();
+                }
+
+            }
+
+        }
+
+    }
+
+
 }

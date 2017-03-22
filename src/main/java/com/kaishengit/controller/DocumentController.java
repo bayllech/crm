@@ -1,16 +1,26 @@
 package com.kaishengit.controller;
 
+import com.kaishengit.dto.AjaxResult;
 import com.kaishengit.exception.NotFoundException;
 import com.kaishengit.pojo.Document;
 import com.kaishengit.service.DocumentService;
+import org.jboss.logging.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.List;
 
 /**
@@ -46,10 +56,17 @@ public class DocumentController {
     public String saveDir(String name , Integer fid) {
         documentService.saveDir(name , fid);
 
-        return "redirect:/doc:fid" + fid;
+        return "redirect:/document?fid="+fid;
     }
 
 
+    /**
+     * 保存文件
+     * @param file
+     * @param fid
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/file/upload")
     @ResponseBody
     public String saveFile (MultipartFile file , Integer fid) throws IOException {
@@ -57,9 +74,38 @@ public class DocumentController {
         if(file.isEmpty()) {
             throw new NotFoundException();
         } else {
-           documentService.saveFile(file ,fid);
+            documentService.saveFile(file ,fid);
             return "success";
         }
+    }
+
+
+    /**
+     * 下载文件
+     * @param id
+     * @return
+     * @throws FileNotFoundException
+     */
+    @GetMapping("/download/{id:\\d+}")
+    @ResponseBody
+    public ResponseEntity<InputStreamResource> downloadFile(@PathVariable Integer id)
+            throws FileNotFoundException {
+        InputStream inputStream = documentService.downloadFile(id);
+        Document document = documentService.findById(id);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachement" ,document.getName(), Charset.forName("UTF-8"));
+
+        return new ResponseEntity<InputStreamResource>(new InputStreamResource(inputStream) , headers , HttpStatus.OK);
+
+    }
+
+    @GetMapping("/del/{id:\\d+}")
+    @ResponseBody
+    public AjaxResult del(@PathVariable Integer id) {
+        documentService.delById(id);
+        return new AjaxResult(AjaxResult.SUCCESS);
     }
 
 }

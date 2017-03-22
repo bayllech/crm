@@ -13,6 +13,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <title>凯盛CRM | 文档管理</title>
     <%@include file="../include/css.jsp"%>
     <link rel="stylesheet" href="/static/plugins/uploader/webuploader.css">
+
+    <style>
+        #uploadBtn{
+            float: left;
+            margin-right:20px;
+        }
+    </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -60,11 +67,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <c:choose>
                                     <c:when test="${doc.type == 'dir'}">
                                         <td><i class="fa fa-folder-o"></i></td>
-                                        <td><a href="/doc?fid=${doc.id}">${doc.name}</a></td>
+                                        <td><a href="/document?fid=${doc.id}">${doc.name}</a></td>
                                     </c:when>
                                     <c:otherwise>
                                         <td><i class="fa fa-file-o"></i></td>
-                                        <td><a href="/doc/download/${doc.id}">${doc.name}</a></td>
+                                        <td><a href="/document/download/${doc.id}">${doc.name}</a></td>
                                     </c:otherwise>
                                 </c:choose>
 
@@ -116,6 +123,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- REQUIRED JS SCRIPTS -->
 
 <%@include file="../include/js.jsp"%>
+<script src="/static/plugins/layer/layer.js"></script>
 <script src="/static/plugins/uploader/webuploader.min.js"></script>
 <script>
     $(function(){
@@ -134,15 +142,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
         });
         uploader.on( 'uploadSuccess', function( file,data ) {
             if(data._raw == "success") {
+                layer.msg("上传成功");
                 window.history.go(0);
+            } else {
+                layer.msg("上传失败");
             }
+
         });
         uploader.on( 'uploadError', function( file ) {
-            alert("文件上传失败");
+            layer.msg("文件上传失败");
         });
         uploader.on( 'uploadComplete', function( file ) {
             $("#uploadBtn .text").html('<i class="fa fa-upload"></i> 上传文件').removeAttr("disabled");;
         });
+
         //新建文件夹
         $("#newDir").click(function(){
             $("#dirModal").modal({
@@ -158,11 +171,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
             }
             $("#saveDirForm").submit();
         });
+
+        //删除
         $(".remove").click(function () {
             var id = $(this).attr("rel");
             layer.confirm("确定要删除吗?",function(index){
                 layer.close(index);
-                $.get("/doc/del/"+id).done(function(resp){
+                $.get("/document/del/"+id).done(function(resp){
                     if(resp.status == 'success') {
                         layer.msg("删除成功");
                         window.history.go(0);

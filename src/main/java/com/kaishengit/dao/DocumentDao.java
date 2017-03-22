@@ -16,10 +16,10 @@ public class DocumentDao extends BaseDao<Document , Integer> {
 
     public List<Document> findAllDocumentByFid(Integer fid) {
 
-        String hql = "from Document where fid = ?";
+        String hql = "from Document where fid = :fid";
         Query query = getSession().createQuery(hql);
 
-        query.setString(0,"fid");
+        query.setParameter("fid",fid);
 
         List<Document> documentList = query.list();
         return documentList;

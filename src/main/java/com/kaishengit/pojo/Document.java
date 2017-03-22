@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name="t_document")
+@Table(name = "t_document")
 public class Document {
 
     public static final String TYPE_DIR = "dir";
@@ -16,7 +16,8 @@ public class Document {
     private Integer id;
     private String name;
     private String size;
-    private java.sql.Timestamp createtime;
+    @Column(insertable = false,updatable = false)
+    private Timestamp createtime;
     private String createuser;
     private String type;
     private String filename;
