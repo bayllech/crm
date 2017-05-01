@@ -13,7 +13,7 @@
                 <li class="${param.menu == 'home' ? 'active' : ''}"><a href="/home"><i class="fa fa-home"></i> <span>首页</span></a></li>
                 <li class="${param.menu == 'notice' ? 'active' : ''}"><a href="#"><i class="fa fa-bullhorn"></i> <span>公告</span></a></li>
                 <li class="${param.menu == 'sales' ? 'active' : ''}"><a href="#"><i class="fa fa-building-o"></i> <span>销售机会</span></a></li>
-                <li class="${param.menu == 'customer' ? 'active' : ''}"><a href="#"><i class="fa fa-users"></i> <span>客户管理</span></a></li>
+                <li class="${param.menu == 'customer' ? 'active' : ''}"><a href="/customer"><i class="fa fa-users"></i> <span>客户管理</span></a></li>
                 <li class="${param.menu == 'chart' ? 'active' : ''}"><a href="#"><i class="fa fa-bar-chart"></i> <span>统计</span></a></li>
                 <li class="${param.menu == 'task' ? 'active' : ''}"><a href="#"><i class="fa fa-calendar-check-o"></i> <span>待办事项</span></a></li>
                 <li class="${param.menu == 'document' ? 'active' : ''}"><a href="/document"><i class="fa fa-file-text"></i> <span>文档管理</span></a></li>

@@ -13,5 +13,8 @@ public class ShiroUtil {
         return getCurrentUser().getUsername();
     }
 
+    public static Integer getCurrentUserID() {
+        return getCurrentUser().getId();
+    }
 
 }
