@@ -7,12 +7,12 @@ import com.kaishengit.exception.NotFoundException;
 import com.kaishengit.pojo.Customer;
 import com.kaishengit.service.CustomerService;
 import com.kaishengit.shiro.ShiroUtil;
+import com.kaishengit.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Id;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +42,7 @@ public class CustomerController {
         String start = request.getParameter("start");
         String length = request.getParameter("length");
         String keyword = request.getParameter("search[value]");
+        keyword = Strings.toUTF8(keyword);
         Map<String, Object> map = new HashMap<>();
         map.put("draw", draw);
         map.put("start", start);
@@ -70,7 +71,7 @@ public class CustomerController {
     }
 
     //删除客户
-    @GetMapping("/del/{id:\\+}")
+    @GetMapping("/del/{id:\\d+}")
     @ResponseBody
     public String del(@PathVariable Integer id) {
         customerService.del(id);
@@ -78,17 +79,17 @@ public class CustomerController {
     }
 
     //显示所有公司
-    @PostMapping("/company.json")
+    @GetMapping("/company.json")
     @ResponseBody
-    public List<Customer> showAllCompany(Model model) {
-        return (List<Customer>) customerService.findAllCompany();
+    public List<Customer> showAllCompany() {
+        return customerService.findAllCompany();
     }
 
     //编辑时获取相应客户和公司信息
-    @GetMapping("/edit/{id:\\+}.json")
+    @GetMapping("/edit/{id:\\d+}.json")
     @ResponseBody
     public AjaxResult editShow(@PathVariable Integer id) {
-        List<Customer> companyList = (List<Customer>) customerService.findAllCompany();
+        List<Customer> companyList = customerService.findAllCompany();
         Customer customer = customerService.findById(id);
         if (customer == null) {
             return new AjaxResult("error", "找不到相应的客户");
@@ -101,7 +102,7 @@ public class CustomerController {
     }
 
     //跳转到显示客户或某公司所有客户页面
-    @GetMapping("/{id:\\+}")
+    @GetMapping("/{id:\\d+}")
     public String view(@PathVariable Integer id,Model model) {
         Customer customer = customerService.findById(id);
         if (customer == null) {

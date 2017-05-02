@@ -221,7 +221,7 @@
                 }}
             ],
             "language": { //定义中文
-                "search": "客户名称或电话:",
+                "search": "客户名称:",
                 "zeroRecords": "没有匹配的数据",
                 "lengthMenu": "显示 _MENU_ 条数据",
                 "info": "显示从 _START_ 到 _END_ 条数据 共 _TOTAL_ 条数据",
@@ -277,7 +277,7 @@
 
             //使用Ajax加载最新的公司列表
             $.get("/customer/company.json").done(function(data){
-                var $select = $("#companyList");
+                var $select = $("#companyList select");
                 $select.html("");
                 $select.append("<option></option>");
                 if(data && data.length) {
@@ -288,7 +288,7 @@
                     }
                 }
             }).fail(function(){
-                alert("服务器异常");
+                alert("加载服务器异常");
             });
 
 
@@ -357,14 +357,14 @@
                         dataTable.ajax.reload();
                     }
                 }).fail(function(){
-                    alert("服务器异常");
+                    alert("编辑服务器异常");
                 });
             }
         });
 
         $(document).delegate(".editLink","click",function(){
             var id = $(this).attr("rel");
-            var $select = $("#editCompanyList");
+            var $select = $("#editCompanyList select");
             $select.html("");
             $select.append("<option></option>");
 

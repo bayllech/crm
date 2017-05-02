@@ -2,6 +2,7 @@ package com.kaishengit.dao;
 
 import com.kaishengit.pojo.Customer;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -18,7 +19,7 @@ import java.util.Map;
 public class CustomerDao extends BaseDao<Customer,Integer> {
 
     //查询所有公司
-    public Object findAllCompany() {
+    public List<Customer> findAllCompany() {
         Criteria criteria = getSession().createCriteria(Customer.class);
         criteria.add(Restrictions.eq("type","company"));
         return criteria.list();
@@ -27,7 +28,7 @@ public class CustomerDao extends BaseDao<Customer,Integer> {
     public Long filterCount(Map<String, Object> map) {
         Criteria criteria = getSession().createCriteria(Customer.class);
         if (map.get("keyword") != "") {
-            criteria.add(Restrictions.eq("name", map.get("keyword")));
+            criteria.add(Restrictions.like("name",map.get("keyword")));
         }
         criteria.setProjection(Projections.rowCount());
         return (Long) criteria.uniqueResult();
@@ -36,11 +37,10 @@ public class CustomerDao extends BaseDao<Customer,Integer> {
     public List<Customer> findByParam(String start,String length,String keyword) {
         Criteria criteria = getSession().createCriteria(Customer.class);
         if (keyword != "") {
-            criteria.add(Restrictions.eq("name", keyword));
+            criteria.add(Restrictions.like("name",keyword, MatchMode.ANYWHERE));
         }
         criteria.setFirstResult(Integer.parseInt(start));
         criteria.setMaxResults(Integer.parseInt(length));
-
         return criteria.list();
     }
 

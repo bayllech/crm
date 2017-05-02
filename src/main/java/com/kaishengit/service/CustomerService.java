@@ -17,7 +17,7 @@ public interface CustomerService {
 
     void del(Integer id);
 
-    Object findAllCompany();
+    List<Customer> findAllCompany();
 
     Long count();
 

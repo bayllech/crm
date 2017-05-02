@@ -44,7 +44,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Object findAllCompany() {
+    public List<Customer> findAllCompany() {
         return customerDao.findAllCompany();
     }
 
