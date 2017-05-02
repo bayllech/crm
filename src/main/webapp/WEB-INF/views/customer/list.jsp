@@ -9,7 +9,10 @@
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <%@include file="../include/css.jsp"%>
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/dist/css/AdminLTE.min.css">
     <link rel="stylesheet" href="/static/dist/css/skins/skin-blue.min.css">
+    <link rel="stylesheet" href="/static/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/plugins/datatables/jquery.dataTables.css">
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -274,7 +277,7 @@
 
             //使用Ajax加载最新的公司列表
             $.get("/customer/company.json").done(function(data){
-                var $select = $("#companyList select");
+                var $select = $("#companyList");
                 $select.html("");
                 $select.append("<option></option>");
                 if(data && data.length) {
@@ -361,7 +364,7 @@
 
         $(document).delegate(".editLink","click",function(){
             var id = $(this).attr("rel");
-            var $select = $("#editCompanyList select");
+            var $select = $("#editCompanyList");
             $select.html("");
             $select.append("<option></option>");
 
@@ -370,9 +373,9 @@
 
                 if(data.state == "success") {
                     //1.获取公司列表动态添加select中的option
-                    if(data.companyList && data.companyList.length) {
-                        for(var i = 0;i < data.companyList.length;i++) {
-                            var company = data.companyList[i];
+                    if(data.data.companyList && data.data.companyList.length) {
+                        for(var i = 0;i < data.data.companyList.length;i++) {
+                            var company = data.data.companyList[i];
                             var option = "<option value='"+company.id+"'>"+company.name+"</option>"
                             $select.append(option);
                         }
@@ -380,7 +383,7 @@
 
 
                     //2.将获取的customer对象填入表单
-                    var customer = data.customer;
+                    var customer = data.data.customer;
 
                     //判断customer是否是公司，如果是公司则隐藏所属公司列表
                     if(customer.type == 'company') {

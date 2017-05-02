@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by bayllech on 2017/5/1.
  */
@@ -38,5 +41,36 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void del(Integer id) {
         customerDao.delete(id);
+    }
+
+    @Override
+    public Object findAllCompany() {
+        return customerDao.findAllCompany();
+    }
+
+    @Override
+    public Long count() {
+        return customerDao.count();
+    }
+
+    @Override
+    public Long filterCount(Map<String, Object> map) {
+        return customerDao.filterCount(map);
+    }
+
+    @Override
+    public Customer findById(Integer id) {
+            return customerDao.findById(id);
+    }
+
+
+    @Override
+    public List<Customer> findAllByCompanyid(Integer id) {
+        return customerDao.findAllByCompanyid(id);
+    }
+
+    @Override
+    public List<Customer> findByParam(String start, String length, String keyword) {
+        return customerDao.findByParam(start,length,keyword);
     }
 }
