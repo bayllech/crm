@@ -103,4 +103,10 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setUserid(null);
         customerDao.save(customer);
     }
+
+    @Override
+    public void moveCustomer(Customer customer, Integer userid) {
+        customer.setUserid(userid);
+        customerDao.save(customer);
+    }
 }

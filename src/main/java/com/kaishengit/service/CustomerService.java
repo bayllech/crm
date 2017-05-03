@@ -32,4 +32,6 @@ public interface CustomerService {
     String mkMeCard(Integer id);
 
     void openCustomer(Customer customer);
+
+    void moveCustomer(Customer customer, Integer userid);
 }

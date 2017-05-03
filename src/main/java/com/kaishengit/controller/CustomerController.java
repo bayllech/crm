@@ -12,7 +12,9 @@ import com.kaishengit.dto.DataTablesResult;
 import com.kaishengit.exception.ForbiddenException;
 import com.kaishengit.exception.NotFoundException;
 import com.kaishengit.pojo.Customer;
+import com.kaishengit.pojo.User;
 import com.kaishengit.service.CustomerService;
+import com.kaishengit.service.UserService;
 import com.kaishengit.shiro.ShiroUtil;
 import com.kaishengit.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,8 @@ public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping
     public String list(Model model) {
@@ -127,6 +131,10 @@ public class CustomerController {
             model.addAttribute("customerList", customerList);
         }
 
+        //加载所有员工user
+        List<User> userList = userService.findAll();
+        model.addAttribute("userList", userList);
+
         return "customer/view";
     }
 
@@ -159,7 +167,21 @@ public class CustomerController {
         }
         customerService.openCustomer(customer);
 
-        return "redirect:/"+id;
+        return "redirect:/customer" + id;
+    }
+
+    //转移员工
+    @PostMapping("/move")
+    public String moveCustomer(Integer id,Integer userid) {
+        Customer customer = customerService.findById(id);
+        if (customer == null) {
+            throw new NotFoundException();
+        }
+        if (customer.getUserid() != null && !customer.getUserid().equals(ShiroUtil.getCurrentUserID()) && !ShiroUtil.isManage()) {
+            throw new ForbiddenException();
+        }
+        customerService.moveCustomer(customer, userid);
+        return "redirect:/customer";
     }
 
 }
