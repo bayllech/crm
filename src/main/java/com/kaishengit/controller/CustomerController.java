@@ -1,5 +1,12 @@
 package com.kaishengit.controller;
 
+import com.google.common.collect.Maps;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
 import com.kaishengit.dto.AjaxResult;
 import com.kaishengit.dto.DataTablesResult;
 import com.kaishengit.exception.ForbiddenException;
@@ -14,6 +21,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -118,5 +128,22 @@ public class CustomerController {
         }
 
         return "customer/view";
+    }
+
+    //生成客户信息二维码
+    @GetMapping("/qrcode/{id:\\d+}.png")
+    public void mkQrCode(@PathVariable Integer id, HttpServletResponse response) throws WriterException, IOException {
+        String meCard = customerService.mkMeCard(id);
+
+        Map<EncodeHintType,String> hints = Maps.newHashMap();
+        hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+
+        BitMatrix bitMatrix = new MultiFormatWriter().encode(meCard, BarcodeFormat.QR_CODE, 200, 200, hints);
+        OutputStream outputStream = response.getOutputStream();
+        MatrixToImageWriter.writeToStream(bitMatrix, "png", outputStream);
+
+        outputStream.flush();
+        outputStream.close();
+
     }
 }

@@ -5,6 +5,7 @@ import com.kaishengit.pojo.Customer;
 import com.kaishengit.service.CustomerService;
 import com.kaishengit.shiro.ShiroUtil;
 import com.kaishengit.util.Strings;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,5 +73,31 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<Customer> findByParam(String start, String length, String keyword) {
         return customerDao.findByParam(start,length,keyword);
+    }
+
+    @Override
+    public String mkMeCard(Integer id) {
+        Customer customer = customerDao.findById(id);
+        StringBuilder mecard = new StringBuilder("MECARD:");
+        if (StringUtils.isNotEmpty(customer.getName())) {
+            mecard.append("N:" + customer.getName() + ";");
+        }
+        if (StringUtils.isNotEmpty(customer.getTel())) {
+            mecard.append("TEL:" + customer.getTel() + ";");
+        }
+        if (StringUtils.isNotEmpty(customer.getEmail())) {
+            mecard.append("EMAIL:" + customer.getEmail() + ";");
+        }
+        if (StringUtils.isNotEmpty(customer.getAddress())) {
+            mecard.append("ADR:" + customer.getAddress() + ";");
+        }
+        if (StringUtils.isNotEmpty(customer.getWeixin())) {
+            mecard.append("WECHAR:" + customer.getWeixin() + ";");
+        }
+        if (StringUtils.isNotEmpty(customer.getCompanyname())) {
+            mecard.append("ORG:" + customer.getCompanyname() + ";");
+        }
+        mecard.append(";");
+        return mecard.toString();
     }
 }

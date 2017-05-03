@@ -225,6 +225,8 @@
                 "zeroRecords": "没有匹配的数据",
                 "lengthMenu": "显示 _MENU_ 条数据",
                 "info": "显示从 _START_ 到 _END_ 条数据 共 _TOTAL_ 条数据",
+//                "infoEmpty": "显示第 0 至 0 项结果，共 0 项",
+                "infoEmpty": "",
                 "infoFiltered": "(从 _MAX_ 条数据中过滤得来)",
                 "loadingRecords": "加载中...",
                 "processing": "处理中...",

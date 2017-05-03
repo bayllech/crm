@@ -28,4 +28,6 @@ public interface CustomerService {
     List<Customer> findAllByCompanyid(Integer id);
 
     List<Customer> findByParam(String start, String length, String keyword);
+
+    String mkMeCard(Integer id);
 }
