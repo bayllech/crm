@@ -60,8 +60,8 @@ public class CustomerController {
         map.put("keyword", keyword);
         Long count = customerService.count();
         Long filterCount = customerService.filterCount(map);
-        List<Customer> customerList = customerService.findByParam(start,length,keyword);
-        return new DataTablesResult<>(draw,customerList,count,filterCount);
+        List<Customer> customerList = customerService.findByParam(start, length, keyword);
+        return new DataTablesResult<>(draw, customerList, count, filterCount);
     }
 
     //新增客户
@@ -75,7 +75,7 @@ public class CustomerController {
     //编辑客户
     @PostMapping("/edit")
     @ResponseBody
-    public  String edit(Customer customer) {
+    public String edit(Customer customer) {
         customerService.edit(customer);
         return "success";
     }
@@ -107,13 +107,13 @@ public class CustomerController {
             Map<String, Object> result = new HashMap<>();
             result.put("companyList", companyList);
             result.put("customer", customer);
-            return new AjaxResult("success",result);
+            return new AjaxResult("success", result);
         }
     }
 
     //跳转到显示客户或某公司所有客户页面
     @GetMapping("/{id:\\d+}")
-    public String view(@PathVariable Integer id,Model model) {
+    public String view(@PathVariable Integer id, Model model) {
         Customer customer = customerService.findById(id);
         if (customer == null) {
             throw new NotFoundException();
@@ -135,7 +135,7 @@ public class CustomerController {
     public void mkQrCode(@PathVariable Integer id, HttpServletResponse response) throws WriterException, IOException {
         String meCard = customerService.mkMeCard(id);
 
-        Map<EncodeHintType,String> hints = Maps.newHashMap();
+        Map<EncodeHintType, String> hints = Maps.newHashMap();
         hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
 
         BitMatrix bitMatrix = new MultiFormatWriter().encode(meCard, BarcodeFormat.QR_CODE, 200, 200, hints);
@@ -146,4 +146,20 @@ public class CustomerController {
         outputStream.close();
 
     }
+
+    //公开客户
+    @GetMapping("/open/{id:\\d+}")
+    public String openCustomer(@PathVariable Integer id) {
+        Customer customer = customerService.findById(id);
+        if (customer == null) {
+            throw new NotFoundException();
+        }
+        if (customer.getUserid() != null && !customer.getUserid().equals(ShiroUtil.getCurrentUserID()) && !ShiroUtil.isManage()) {
+            throw new ForbiddenException();
+        }
+        customerService.openCustomer(customer);
+
+        return "redirect:/"+id;
+    }
+
 }

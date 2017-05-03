@@ -91,13 +91,16 @@ public class CustomerServiceImpl implements CustomerService {
         if (StringUtils.isNotEmpty(customer.getAddress())) {
             mecard.append("ADR:" + customer.getAddress() + ";");
         }
-        if (StringUtils.isNotEmpty(customer.getWeixin())) {
-            mecard.append("WECHAR:" + customer.getWeixin() + ";");
-        }
         if (StringUtils.isNotEmpty(customer.getCompanyname())) {
             mecard.append("ORG:" + customer.getCompanyname() + ";");
         }
         mecard.append(";");
         return mecard.toString();
+    }
+
+    @Override
+    public void openCustomer(Customer customer) {
+        customer.setUserid(null);
+        customerDao.save(customer);
     }
 }

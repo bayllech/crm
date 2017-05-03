@@ -30,4 +30,6 @@ public interface CustomerService {
     List<Customer> findByParam(String start, String length, String keyword);
 
     String mkMeCard(Integer id);
+
+    void openCustomer(Customer customer);
 }
