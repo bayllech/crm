@@ -1,6 +1,7 @@
 package com.kaishengit.service;
 
 import com.kaishengit.pojo.Sales;
+import com.kaishengit.pojo.SalesLog;
 
 import java.util.List;
 import java.util.Map;
@@ -17,4 +18,8 @@ public interface SalesService {
     Long countByParam(Map<String, Object> params);
 
     void saveSales(Sales sales);
+
+    Sales findById(Integer id);
+
+    List<SalesLog> findSalesLogBySalesId(Integer id);
 }

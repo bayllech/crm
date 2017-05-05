@@ -68,4 +68,14 @@ public class SalesServiceImpl implements SalesService {
         salesLogDao.save(salesLog);
 
     }
+
+    @Override
+    public Sales findById(Integer id) {
+        return salesMapper.findById(id);
+    }
+
+    @Override
+    public List<SalesLog> findSalesLogBySalesId(Integer id) {
+        return salesLogDao.findBySalesId(id);
+    }
 }

@@ -14,7 +14,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.6 -->
     <%@include file="../include/css.jsp"%>
-    <link rel="stylesheet" href="/static/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/plugins/datatables/jquery.dataTables.css">
     <link rel="stylesheet" href="/static/plugins/daterangepicker/daterangepicker-bs3.css">
     <link rel="stylesheet" href="/static/plugins/datatables/dataTables.bootstrap.css">

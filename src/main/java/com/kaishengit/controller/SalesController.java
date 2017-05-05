@@ -2,17 +2,18 @@ package com.kaishengit.controller;
 
 import com.google.common.collect.Maps;
 import com.kaishengit.dto.DataTablesResult;
+import com.kaishengit.exception.ForbiddenException;
+import com.kaishengit.exception.NotFoundException;
 import com.kaishengit.pojo.Sales;
+import com.kaishengit.pojo.SalesLog;
 import com.kaishengit.service.CustomerService;
 import com.kaishengit.service.SalesService;
+import com.kaishengit.shiro.ShiroUtil;
 import com.kaishengit.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -73,6 +74,31 @@ public class SalesController {
     public String save(Sales sales) {
         salesService.saveSales(sales);
         return "success";
+    }
+
+    //显示销售项目详情
+    @RequestMapping(value = "/{id:\\d+}",method = RequestMethod.GET)
+    public String view(@PathVariable Integer id,Model model) {
+        Sales sales = salesService.findById(id);
+        if(sales == null) {
+            throw new NotFoundException();
+        }
+        if(!sales.getUserid().equals(ShiroUtil.getCurrentUserID()) && !ShiroUtil.isManage()) {
+            throw new ForbiddenException();
+        }
+        model.addAttribute("sales",sales);
+
+        //加载项目跟进日志详情
+        List<SalesLog> salesLogList = salesService.findSalesLogBySalesId(id);
+        model.addAttribute("salesLogList", salesLogList);
+//        model.addAttribute(salesLogList);
+        return "sales/view";
+    }
+
+    //修改项目进度
+    @RequestMapping(value = "/progress/deit",method = RequestMethod.POST)
+    public String editProgress(Integer id,String progress) {
+        return null;
     }
 
 
