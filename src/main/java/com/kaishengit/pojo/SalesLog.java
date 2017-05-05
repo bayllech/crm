@@ -1,10 +1,16 @@
 package com.kaishengit.pojo;
 
+import javax.persistence.*;
 import java.sql.Timestamp;
 
+@Entity
+@Table(name = "t_sales_log")
 public class SalesLog {
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id;
   private String context;
+  @Column(insertable = false,updatable = false)
   private java.sql.Timestamp createtime;
   private String type;
   private Integer salesid;

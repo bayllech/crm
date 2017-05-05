@@ -15,4 +15,6 @@ public interface SalesService {
     Long count();
 
     Long countByParam(Map<String, Object> params);
+
+    void saveSales(Sales sales);
 }

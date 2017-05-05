@@ -67,5 +67,13 @@ public class SalesController {
 
     }
 
+    //新增销售机会
+    @RequestMapping(value = "/new",method = RequestMethod.POST)
+    @ResponseBody
+    public String save(Sales sales) {
+        salesService.saveSales(sales);
+        return "success";
+    }
+
 
 }
