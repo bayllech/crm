@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kaishengit.mapper.SalesMapper">
+
+    <cache/>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_sales( name, price, custid, custname, progress, lasttime, userid, username, successtime)
+        VALUES (#{name},#{price},#{custid},#{custname},#{progress},#{lasttime},#{userid},#{username},#{successtime})
+    </insert>
+    <update id="update">
+        UPDATE t_sales SET lasttime = #{lasttime},successtime=#{successtime},progress=#{progress}
+        where id = #{id}
+    </update>
+    <delete id="del">
+        DELETE FROM t_sales WHERE id = #{id}
+    </delete>
+
+    <select id="findByParam" resultType="Sales">
+        SELECT * FROM t_sales
+        <where>
+            <if test="userid != null and userid != ''">
+                userid = #{userid}
+            </if>
+            <if test="name != null and name != ''">
+                and name like concat('%',#{name},'%')
+            </if>
+            <if test="progress != null and progress != ''">
+                and progress = #{progress}
+            </if>
+            <if test="startdate != null and startdate != ''">
+                and date(lasttime) >= #{startdate}
+            </if>
+            <if test="enddate != null and enddate != ''">
+                and date(lasttime) &lt;= #{enddate}
+            </if>
+        </where>
+        order by id desc
+        limit ${start},${length}
+    </select>
+
+    <select id="countByParam" resultType="long">
+        SELECT count(*) FROM t_sales
+        <where>
+            <if test="userid != null and userid != ''">
+                userid = #{userid}
+            </if>
+            <if test="name != null and name != ''">
+                and name like concat('%',#{name},'%')
+            </if>
+            <if test="progress != null and progress != ''">
+                and progress = #{progress}
+            </if>
+            <if test="startdate != null and startdate != ''">
+                and date(lasttime) >= #{startdate}
+            </if>
+            <if test="enddate != null and enddate != ''">
+                and date(lasttime) &lt;= #{enddate}
+            </if>
+        </where>
+    </select>
+    <select id="findByCustId" resultType="com.kaishengit.pojo.Sales">
+        SELECT * FROM t_sales WHERE custid = #{custId} order by id desc
+    </select>
+    <select id="findById" resultType="com.kaishengit.pojo.Sales">
+        SELECT * FROM t_sales WHERE id = #{id}
+    </select>
+    <select id="findStateCount" resultType="java.lang.Long">
+        SELECT count(*) FROM t_sales WHERE date(successtime) >= #{start}
+        and date(successtime) &lt;= #{end} and progress = #{state}
+    </select>
+    <select id="findStateMoney" resultType="java.lang.Float">
+        SELECT sum(price) FROM t_sales WHERE date(successtime) >= #{start}
+        and date(successtime) &lt;= #{end} and progress = #{state}
+    </select>
+    <select id="countProgress" resultType="java.util.Map">
+        SELECT temp.custtype as 'name',
+        (SELECT COUNT(*) FROM t_sales WHERE t_sales.progress = temp.custtype and date(createtime) >= #{start}
+        and date(createtime) &lt;= #{end}) AS 'value'
+        FROM (SELECT '初次接触' AS 'custtype'
+        UNION SELECT '确认意向'
+        UNION SELECT '提供合同'
+        UNION SELECT '完成交易'
+        UNION SELECT '交易搁置') AS temp
+    </select>
+    <select id="totalUserMoney" resultType="java.util.Map">
+        select user.realname,(select IFNULL(sum(price),0) FROM t_sales where userid = user.id and date(successtime) >= #{start}
+        and date(successtime) &lt;= #{end}) as price
+        from (select id,realname from t_user) as user
+    </select>
+
+
+</mapper>

@@ -49,4 +49,5 @@ public class CustomerDao extends BaseDao<Customer,Integer> {
         criteria.add(Restrictions.eq("companyid", id));
         return criteria.list();
     }
+
 }

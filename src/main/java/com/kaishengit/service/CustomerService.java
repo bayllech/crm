@@ -34,4 +34,6 @@ public interface CustomerService {
     void openCustomer(Customer customer);
 
     void moveCustomer(Customer customer, Integer userid);
+
+    List<Customer> findAllCustomer();
 }

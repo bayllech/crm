@@ -167,7 +167,7 @@ public class CustomerController {
         }
         customerService.openCustomer(customer);
 
-        return "redirect:/customer" + id;
+        return "redirect:/customer/" + id;
     }
 
     //转移员工

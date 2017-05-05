@@ -24,4 +24,8 @@ public class ShiroUtil {
     public static Boolean isAdmin() {
         return getCurrentUser().getRole().getRolename().equals("管理员");
     }
+
+    public static Boolean isEmployee() {
+        return getCurrentUser().getRole().getRolename().equals("员工");
+    }
 }

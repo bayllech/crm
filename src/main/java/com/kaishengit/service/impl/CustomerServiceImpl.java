@@ -109,4 +109,9 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setUserid(userid);
         customerDao.save(customer);
     }
+
+    @Override
+    public List<Customer> findAllCustomer() {
+        return customerDao.findAll();
+    }
 }
