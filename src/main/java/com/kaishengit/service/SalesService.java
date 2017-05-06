@@ -1,8 +1,12 @@
 package com.kaishengit.service;
 
 import com.kaishengit.pojo.Sales;
+import com.kaishengit.pojo.SalesFile;
 import com.kaishengit.pojo.SalesLog;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -26,4 +30,8 @@ public interface SalesService {
     void update(Sales sales);
 
     void saveLog(Integer salesid, String content);
+
+    void updateFile(InputStream inputStream, String originalFilename, String contentType, long size, Integer salesid) throws IOException;
+
+    List<SalesFile> findAllFile(Integer id);
 }

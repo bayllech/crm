@@ -6,6 +6,7 @@ import com.kaishengit.dto.DataTablesResult;
 import com.kaishengit.exception.ForbiddenException;
 import com.kaishengit.exception.NotFoundException;
 import com.kaishengit.pojo.Sales;
+import com.kaishengit.pojo.SalesFile;
 import com.kaishengit.pojo.SalesLog;
 import com.kaishengit.service.CustomerService;
 import com.kaishengit.service.SalesService;
@@ -16,8 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -94,6 +98,10 @@ public class SalesController {
         List<SalesLog> salesLogList = salesService.findSalesLogBySalesId(id);
 //        model.addAttribute("salesLogList", salesLogList);
         model.addAttribute(salesLogList);
+
+        //加载资料列表
+        List<SalesFile> salesFileList = salesService.findAllFile(id);
+        model.addAttribute(salesFileList);
         return "sales/view";
     }
 
@@ -111,10 +119,19 @@ public class SalesController {
         return "redirect:/sales/" + id;
     }
 
+    //新增跟进记录
     @RequestMapping(value = "/log/new",method = RequestMethod.POST)
     public String newLog(Integer salesid,String context) {
         salesService.saveLog(salesid,context);
         return "redirect:/sales/"+salesid;
+    }
+
+    //文件上传
+    @RequestMapping(value = "/file/upload",method = RequestMethod.POST)
+    @ResponseBody
+    public String upload(MultipartFile file,Integer salesid) throws IOException {
+        salesService.updateFile(file.getInputStream(),file.getOriginalFilename(),file.getContentType(),file.getSize(),salesid);
+        return "success";
     }
 
 

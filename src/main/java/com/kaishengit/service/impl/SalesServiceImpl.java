@@ -2,18 +2,24 @@ package com.kaishengit.service.impl;
 
 import com.google.common.collect.Maps;
 import com.kaishengit.dao.CustomerDao;
+import com.kaishengit.dao.SalesFileDao;
 import com.kaishengit.dao.SalesLogDao;
 import com.kaishengit.mapper.SalesMapper;
 import com.kaishengit.pojo.Customer;
 import com.kaishengit.pojo.Sales;
+import com.kaishengit.pojo.SalesFile;
 import com.kaishengit.pojo.SalesLog;
 import com.kaishengit.service.SalesService;
 import com.kaishengit.shiro.ShiroUtil;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.*;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by bayllech on 2017/5/5.
@@ -27,6 +33,10 @@ public class SalesServiceImpl implements SalesService {
     private CustomerDao customerDao;
     @Autowired
     private SalesLogDao salesLogDao;
+    @Value("${savePath}")
+    private String uploadPath;
+    @Autowired
+    private SalesFileDao salesFileDao;
     @Override
     public List<Sales> findByParam(Map<String, Object> params) {
         return salesMapper.findByParam(params);
@@ -95,5 +105,32 @@ public class SalesServiceImpl implements SalesService {
         salesLog.setSalesid(salesid);
 
         salesLogDao.save(salesLog);
+    }
+
+    @Override
+    public void updateFile(InputStream inputStream, String originalFilename, String contentType, long size, Integer salesid) throws IOException {
+        String newName = UUID.randomUUID().toString();
+        if (originalFilename.lastIndexOf(".") != -1) {
+            newName += originalFilename.substring(originalFilename.lastIndexOf("."));
+        }
+        FileOutputStream fileOutputStream = new FileOutputStream(new File(uploadPath,newName));
+        IOUtils.copy(inputStream, fileOutputStream);
+        fileOutputStream.flush();
+        fileOutputStream.close();
+        inputStream.close();
+
+        SalesFile salesFile = new SalesFile();
+        salesFile.setContenttype(contentType);
+        salesFile.setFilename(newName);
+        salesFile.setName(originalFilename);
+        salesFile.setSize(size);
+        salesFile.setSalesid(salesid);
+
+        salesFileDao.save(salesFile);
+    }
+
+    @Override
+    public List<SalesFile> findAllFile(Integer salesid) {
+        return salesFileDao.findBySalesId(salesid);
     }
 }

@@ -1,12 +1,18 @@
 package com.kaishengit.pojo;
 
+import javax.persistence.*;
 import java.sql.Timestamp;
 
+@Entity
+@Table(name = "t_sales_file")
 public class SalesFile {
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id;
   private String name;
   private String filename;
   private String contenttype;
+  @Column(insertable = false)
   private java.sql.Timestamp createtime;
   private Long size;
   private Integer salesid;

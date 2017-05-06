@@ -285,7 +285,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         //上传文件成功
         uploader.on("startUpload",function(){
-            $("#uploadBtn .text").html('<i class="fa fa-spinner fa-spin"></i>');
+            $("#uploadBtn.text").html('<i class="fa fa-spinner fa-spin"></i>');
         });
         uploader.on('uploadSuccess', function( file,data ) {
             if(data._raw == "success") {
