@@ -15,6 +15,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.6 -->
     <%@include file="../include/css.jsp"%>
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/static/css/font-awesome.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/static/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/static/dist/css/skins/skin-blue.min.css">
     <link rel="stylesheet" href="/static/plugins/simditor/styles/simditor.css">
     <link rel="stylesheet" href="/static/plugins/uploader/webuploader.css">
     <style>
@@ -227,7 +234,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="/static/plugins/simditor/scripts/hotkeys.min.js"></script>
 <script src="/static/plugins/simditor/scripts/uploader.min.js"></script>
 <script src="/static/plugins/simditor/scripts/simditor.min.js"></script>
-<script src="/static/plugins/webuploader/webuploader.min.js"></script>
+<script src="/static/plugins/uploader/webuploader.min.js"></script>
 <script>
     $(function(){
         //相对时间

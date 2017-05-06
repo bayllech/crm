@@ -22,4 +22,8 @@ public interface SalesService {
     Sales findById(Integer id);
 
     List<SalesLog> findSalesLogBySalesId(Integer id);
+
+    void update(Sales sales);
+
+    void saveLog(Integer salesid, String content);
 }

@@ -1,6 +1,7 @@
 package com.kaishengit.controller;
 
 import com.google.common.collect.Maps;
+import com.kaishengit.dao.SalesLogDao;
 import com.kaishengit.dto.DataTablesResult;
 import com.kaishengit.exception.ForbiddenException;
 import com.kaishengit.exception.NotFoundException;
@@ -10,6 +11,7 @@ import com.kaishengit.service.CustomerService;
 import com.kaishengit.service.SalesService;
 import com.kaishengit.shiro.ShiroUtil;
 import com.kaishengit.util.Strings;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -90,15 +92,29 @@ public class SalesController {
 
         //加载项目跟进日志详情
         List<SalesLog> salesLogList = salesService.findSalesLogBySalesId(id);
-        model.addAttribute("salesLogList", salesLogList);
-//        model.addAttribute(salesLogList);
+//        model.addAttribute("salesLogList", salesLogList);
+        model.addAttribute(salesLogList);
         return "sales/view";
     }
 
     //修改项目进度
-    @RequestMapping(value = "/progress/deit",method = RequestMethod.POST)
+    @RequestMapping(value = "/progress/edit",method = RequestMethod.POST)
     public String editProgress(Integer id,String progress) {
-        return null;
+        Sales sales = salesService.findById(id);
+        if (sales == null) {
+            throw new NotFoundException();
+        }
+        sales.setProgress(progress);
+        sales.setLasttime(DateTime.now().toString("YY-MM-DD"));
+        salesService.update(sales);
+
+        return "redirect:/sales/" + id;
+    }
+
+    @RequestMapping(value = "/log/new",method = RequestMethod.POST)
+    public String newLog(Integer salesid,String context) {
+        salesService.saveLog(salesid,context);
+        return "redirect:/sales/"+salesid;
     }
 
 

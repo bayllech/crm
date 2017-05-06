@@ -17,4 +17,6 @@ public interface SalesMapper {
     void save(Sales sales);
 
     Sales findById(Integer id);
+
+    void update(Sales sales);
 }

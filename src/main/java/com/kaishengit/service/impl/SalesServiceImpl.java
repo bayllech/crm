@@ -2,7 +2,6 @@ package com.kaishengit.service.impl;
 
 import com.google.common.collect.Maps;
 import com.kaishengit.dao.CustomerDao;
-import com.kaishengit.dao.SalesDao;
 import com.kaishengit.dao.SalesLogDao;
 import com.kaishengit.mapper.SalesMapper;
 import com.kaishengit.pojo.Customer;
@@ -22,8 +21,6 @@ import java.util.Map;
 @Service
 public class SalesServiceImpl implements SalesService {
 
-    @Autowired
-    private SalesDao salesDao;
     @Autowired
     private SalesMapper salesMapper;
     @Autowired
@@ -77,5 +74,26 @@ public class SalesServiceImpl implements SalesService {
     @Override
     public List<SalesLog> findSalesLogBySalesId(Integer id) {
         return salesLogDao.findBySalesId(id);
+    }
+
+    @Override
+    public void update(Sales sales) {
+        salesMapper.update(sales);
+        //添加项目进度日志
+        SalesLog salesLog = new SalesLog();
+        salesLog.setSalesid(sales.getId());
+        salesLog.setContext(ShiroUtil.getCurrentUser().getRealname() + "  修改项目进度为：" + sales.getProgress());
+        salesLog.setType("AUTO");
+        salesLogDao.save(salesLog);
+    }
+
+    @Override
+    public void saveLog(Integer salesid, String content) {
+        SalesLog salesLog = new SalesLog();
+        salesLog.setType("input");
+        salesLog.setContext(content);
+        salesLog.setSalesid(salesid);
+
+        salesLogDao.save(salesLog);
     }
 }
