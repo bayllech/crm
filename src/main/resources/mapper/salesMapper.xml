@@ -15,6 +15,19 @@
     <delete id="del">
         DELETE FROM t_sales WHERE id = #{id}
     </delete>
+    <delete id="delSalesFile">
+        DELETE FROM t_sales_file WHERE id IN
+        <foreach collection="list" item="salesFile" open="(" close=")" separator=",">
+            ${salesFile.id}
+        </foreach>
+    </delete>
+    <delete id="delSalesLog">
+        DELETE FROM t_sales_log WHERE id IN
+        <foreach collection="list" item="salesLog" open="(" close=")" separator=",">
+            ${salesLog.id}
+        </foreach>
+    </delete>
+
 
     <select id="findByParam" resultType="Sales">
         SELECT * FROM t_sales

@@ -2,8 +2,10 @@ package com.kaishengit.service.impl;
 
 import com.google.common.collect.Maps;
 import com.kaishengit.dao.CustomerDao;
+import com.kaishengit.dao.SalesDao;
 import com.kaishengit.dao.SalesFileDao;
 import com.kaishengit.dao.SalesLogDao;
+import com.kaishengit.exception.NotFoundException;
 import com.kaishengit.mapper.SalesMapper;
 import com.kaishengit.pojo.Customer;
 import com.kaishengit.pojo.Sales;
@@ -15,6 +17,7 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.util.List;
@@ -29,6 +32,8 @@ public class SalesServiceImpl implements SalesService {
 
     @Autowired
     private SalesMapper salesMapper;
+    @Autowired
+    private SalesDao salesDao;
     @Autowired
     private CustomerDao customerDao;
     @Autowired
@@ -137,5 +142,26 @@ public class SalesServiceImpl implements SalesService {
     @Override
     public SalesFile findFileById(Integer id) {
         return salesFileDao.findById(id);
+    }
+
+    @Override
+    public void del(Integer id) {
+        Sales sales = salesMapper.findById(id);
+        if (sales != null) {
+            //删除对应的文件
+            List<SalesFile> salesFileList = salesFileDao.findBySalesId(id);
+            if (!salesFileList.isEmpty()) {
+                salesMapper.delSalesFile(salesFileList);
+            }
+            //删除对应的跟进记录
+            List<SalesLog> salesLogList = salesLogDao.findBySalesId(id);
+            if (!salesLogList.isEmpty()) {
+                salesMapper.delSalesLog(salesLogList);
+            }
+            //删除销售项目
+            salesMapper.del(id);
+        } else {
+            throw new NotFoundException();
+        }
     }
 }

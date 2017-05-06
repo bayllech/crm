@@ -36,4 +36,6 @@ public interface SalesService {
     List<SalesFile> findAllFile(Integer id);
 
     SalesFile findFileById(Integer id);
+
+    void del(Integer id);
 }

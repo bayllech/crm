@@ -235,6 +235,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="/static/plugins/simditor/scripts/uploader.min.js"></script>
 <script src="/static/plugins/simditor/scripts/simditor.min.js"></script>
 <script src="/static/plugins/uploader/webuploader.min.js"></script>
+<script src="/static/layer.js"></script>
 <script>
     $(function(){
         //相对时间
