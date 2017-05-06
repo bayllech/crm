@@ -133,4 +133,9 @@ public class SalesServiceImpl implements SalesService {
     public List<SalesFile> findAllFile(Integer salesid) {
         return salesFileDao.findBySalesId(salesid);
     }
+
+    @Override
+    public SalesFile findFileById(Integer id) {
+        return salesFileDao.findById(id);
+    }
 }

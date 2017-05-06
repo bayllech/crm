@@ -1,7 +1,6 @@
 package com.kaishengit.controller;
 
 import com.google.common.collect.Maps;
-import com.kaishengit.dao.SalesLogDao;
 import com.kaishengit.dto.DataTablesResult;
 import com.kaishengit.exception.ForbiddenException;
 import com.kaishengit.exception.NotFoundException;
@@ -14,14 +13,17 @@ import com.kaishengit.shiro.ShiroUtil;
 import com.kaishengit.util.Strings;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +38,8 @@ public class SalesController {
     private SalesService salesService;
     @Autowired
     private CustomerService customerService;
+    @Value("${savePath}")
+    private String filePath;
 
     @GetMapping
     public String list(Model model) {
@@ -132,6 +136,29 @@ public class SalesController {
     public String upload(MultipartFile file,Integer salesid) throws IOException {
         salesService.updateFile(file.getInputStream(),file.getOriginalFilename(),file.getContentType(),file.getSize(),salesid);
         return "success";
+    }
+
+    //合同下载
+    @RequestMapping(value = "/file/{id:\\d+}/download")
+    public ResponseEntity<InputStreamResource> download(@PathVariable Integer id) throws FileNotFoundException {
+        SalesFile salesFile = salesService.findFileById(id);
+        if (salesFile == null) {
+            throw new NotFoundException();
+        }
+        File file = new File("F:/tempFile", salesFile.getFilename());
+        if (!file.exists()) {
+            throw new NotFoundException();
+        }
+        FileInputStream fileInputStream = new FileInputStream(file);
+        String fileName = salesFile.getName();
+        fileName = Strings.toUTF8(fileName);
+
+        return ResponseEntity
+                .ok()
+                .contentLength(salesFile.getSize())
+                .contentType(MediaType.parseMediaType(salesFile.getContenttype()))
+                .header("Content-Disposition","attachment;filename=\""+fileName+"\"")
+                .body(new InputStreamResource(fileInputStream));
     }
 
 

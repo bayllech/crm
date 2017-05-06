@@ -34,4 +34,6 @@ public interface SalesService {
     void updateFile(InputStream inputStream, String originalFilename, String contentType, long size, Integer salesid) throws IOException;
 
     List<SalesFile> findAllFile(Integer id);
+
+    SalesFile findFileById(Integer id);
 }
